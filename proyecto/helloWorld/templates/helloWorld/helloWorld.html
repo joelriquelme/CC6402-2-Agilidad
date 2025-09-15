@@ -2,45 +2,282 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Hello World</title>
-    <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
+    <title>Música - Carruseles</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #f8ffae 0%, #43c6ac 100%);
-            height: 100vh;
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            min-height: 100vh;
             margin: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            color: #fff;
+        }
+        .navbar {
+            width: 100vw;
+            box-sizing: border-box;
+            background: #222;
+            color: #ffb347;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 18px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
-        .hello-container {
-            background: rgba(255,255,255,0.8);
-            padding: 40px 60px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(67,198,172,0.2);
-            text-align: center;
+        .navbar-content {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            box-sizing: border-box;
         }
-        h1 {
-            font-family: 'Pacifico', cursive;
-            font-size: 3em;
-            color: #43c6ac;
-            margin-bottom: 10px;
+        .navbar-logo {
+            font-size: 2em;
+            font-weight: 700;
+            font-family: 'Montserrat', Arial, sans-serif;
+            letter-spacing: 2px;
         }
-        .emoji {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+        .navbar-search {
+            display: flex;
+            align-items: center;
+            background: #333;
+            border-radius: 24px;
+            padding: 4px 16px;
         }
-        p {
+        .navbar-search input {
+            border: none;
+            background: transparent;
+            color: #fff;
+            font-size: 1em;
+            padding: 8px;
+            outline: none;
+            width: 220px;
+        }
+        .navbar-search button {
+            background: #ffb347;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            color: #222;
             font-size: 1.2em;
-            color: #333;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 90px auto 40px auto;
+            padding: 32px;
+            background: rgba(30,30,30,0.85);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .carrusel-titulo {
+            font-size: 2em;
+            margin: 32px 0 16px 8px;
+            color: #ffb347;
+            font-weight: 700;
+            text-align: center;
+            width: 100%;
+        }
+        .carrusel-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .carrusel-flecha {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,179,71,0.8);
+            color: #222;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 2em;
+            cursor: pointer;
+            z-index: 2;
+            transition: background 0.2s;
+        }
+        .carrusel-flecha:hover {
+            background: #ffb347;
+        }
+        .carrusel-flecha.izq {
+            left: -20px;
+        }
+        .carrusel-flecha.der {
+            right: -20px;
+        }
+        .carrusel {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            overflow-x: auto;
+            gap: 24px;
+            padding-bottom: 16px;
+            scrollbar-width: thin;
+            scroll-behavior: smooth;
+            transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+            margin: 0 auto;
+        }
+        .carrusel.animando {
+            transform: translateX(var(--anim-x, 0));
+        }
+        .carrusel-item {
+            min-width: 180px;
+            background: #222;
+            color: #fff;
+            border-radius: 12px;
+            padding: 0 0 16px 0;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .carrusel-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(255,179,71,0.2);
+        }
+        .carrusel-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+        .carrusel-titulo-item {
+            font-size: 1.1em;
+            margin: 12px 0 0 0;
+            font-weight: 600;
+            color: #ffb347;
         }
     </style>
 </head>
 <body>
-    <div class="hello-container">
-        <div class="emoji">🌈✨😊</div>
-        <h1>¡Hola Mundo!</h1>
-        <p>Bienvenido a tu primera página web con estilo.</p>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-logo">MusicFlix</div>
+            <form class="navbar-search" onsubmit="return false;">
+                <input type="text" placeholder="Buscar...">
+                <button type="submit">&#128269;</button>
+            </form>
+        </div>
+    </nav>
+    <div class="main-container">
+        <div class="carrusel-titulo">Artistas</div>
+        <div class="carrusel-wrapper">
+            <button class="carrusel-flecha izq" onclick="moverCarrusel(this, -1)">&#8592;</button>
+            <div class="carrusel" id="carrusel-artistas">
+                <div class="carrusel-item">
+                    <img class="carrusel-img" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=400&q=80" alt="Taylor Swift">
+                    <div class="carrusel-titulo-item">Taylor Swift</div>
+                </div>
+                <div class="carrusel-item">
+                    <img class="carrusel-img" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Bad Bunny">
+                    <div class="carrusel-titulo-item">Bad Bunny</div>
+                </div>
+                <div class="carrusel-item">
+                    <img class="carrusel-img" src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" alt="BTS">
+                    <div class="carrusel-titulo-item">BTS</div>
+                </div>
+                <div class="carrusel-item">
+                    <img class="carrusel-img" src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=400&q=80" alt="Dua Lipa">
+                    <div class="carrusel-titulo-item">Dua Lipa</div>
+                </div>
+                <div class="carrusel-item">
+                    <img class="carrusel-img" src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80" alt="The Weeknd">
+                    <div class="carrusel-titulo-item">The Weeknd</div>
+                </div>
+            </div>
+            <button class="carrusel-flecha der" onclick="moverCarrusel(this, 1)">&#8594;</button>
+        </div>
+        <div class="carrusel-titulo">Discos</div>
+        <div class="carrusel-wrapper">
+            <button class="carrusel-flecha izq" onclick="moverCarrusel(this, -1)">&#8592;</button>
+            <div class="carrusel" id="carrusel-discos">
+                <div class="carrusel-item">
+                    <img class="carrusel-img" src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80" alt="Midnights">
+                    <div class="carrusel-titulo-item">Midnights</div>
+                </div>
+                <div class="carrusel-item">
+                    <img class="carrusel-img" src="https://images.unsplash.com/photo-1526178613658-3f1622045544?auto=format&fit=crop&w=400&q=80" alt="Un Verano Sin Ti">
+                    <div class="carrusel-titulo-item">Un Verano Sin Ti</div>
+                </div>
+                <div class="carrusel-item">
+                    <img class="carrusel-img" src="https://images.unsplash.com/photo-1465101178521-c1a4c8a0a8b7?auto=format&fit=crop&w=400&q=80" alt="Map of the Soul: 7">
+                    <div class="carrusel-titulo-item">Map of the Soul: 7</div>
+                </div>
+                <div class="carrusel-item">
+                    <img class="carrusel-img" src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=400&q=80" alt="Future Nostalgia">
+                    <div class="carrusel-titulo-item">Future Nostalgia</div>
+                </div>
+                <div class="carrusel-item">
+                    <img class="carrusel-img" src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80" alt="After Hours">
+                    <div class="carrusel-titulo-item">After Hours</div>
+                </div>
+            </div>
+            <button class="carrusel-flecha der" onclick="moverCarrusel(this, 1)">&#8594;</button>
+        </div>
+        <div class="carrusel-titulo">Canciones</div>
+        <div class="carrusel-wrapper">
+            <button class="carrusel-flecha izq" onclick="moverCarrusel(this, -1)">&#8592;</button>
+            <div class="carrusel" id="carrusel-canciones">
+                <div class="carrusel-item">
+                    <img class="carrusel-img" src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80" alt="Anti-Hero">
+                    <div class="carrusel-titulo-item">Anti-Hero</div>
+                </div>
+                <div class="carrusel-item">
+                    <img class="carrusel-img" src="https://images.unsplash.com/photo-1526178613658-3f1622045544?auto=format&fit=crop&w=400&q=80" alt="Tití Me Preguntó">
+                    <div class="carrusel-titulo-item">Tití Me Preguntó</div>
+                </div>
+                <div class="carrusel-item">
+                    <img class="carrusel-img" src="https://images.unsplash.com/photo-1465101178521-c1a4c8a0a8b7?auto=format&fit=crop&w=400&q=80" alt="Dynamite">
+                    <div class="carrusel-titulo-item">Dynamite</div>
+                </div>
+                <div class="carrusel-item">
+                    <img class="carrusel-img" src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=400&q=80" alt="Levitating">
+                    <div class="carrusel-titulo-item">Levitating</div>
+                </div>
+                <div class="carrusel-item">
+                    <img class="carrusel-img" src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80" alt="Blinding Lights">
+                    <div class="carrusel-titulo-item">Blinding Lights</div>
+                </div>
+            </div>
+            <button class="carrusel-flecha der" onclick="moverCarrusel(this, 1)">&#8594;</button>
+        </div>
     </div>
+    <script>
+    function moverCarrusel(btn, dir) {
+        const carrusel = btn.parentElement.querySelector('.carrusel');
+        const items = carrusel.querySelectorAll('.carrusel-item');
+        const itemWidth = items[0].offsetWidth + 24; // 24px gap
+        let animX = dir * itemWidth;
+        carrusel.style.setProperty('--anim-x', animX + 'px');
+        carrusel.classList.add('animando');
+        setTimeout(() => {
+            if (dir === 1) {
+                carrusel.appendChild(items[0]);
+                carrusel.scrollLeft -= itemWidth;
+            } else {
+                carrusel.insertBefore(items[items.length-1], items[0]);
+                carrusel.scrollLeft += itemWidth;
+            }
+            carrusel.classList.remove('animando');
+            carrusel.style.setProperty('--anim-x', '0px');
+        }, 400);
+    }
+    </script>
 </body>
 </html>
